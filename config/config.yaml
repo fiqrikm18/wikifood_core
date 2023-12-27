@@ -1,0 +1,10 @@
+app_config:
+  port: 8080
+
+  database:
+    username: db_username
+    password: db_password
+    host: db_host
+    port: db_port
+    db_name: db_name
+

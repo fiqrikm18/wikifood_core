@@ -1,0 +1,28 @@
+basePath: /api/v1
+host: localhost:8080
+info:
+  contact:
+    email: fiqrikm18@gmail.com
+    name: Fiqri Khoirul Muttaqin
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Wikifood Core
+  version: "1.0"
+paths:
+  /healthcheck:
+    get:
+      consumes:
+      - application/json
+      description: Check if server is working
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Check if server is working
+      tags:
+      - health
+swagger: "2.0"
