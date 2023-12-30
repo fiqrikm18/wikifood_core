@@ -22,7 +22,7 @@ type DBConfig struct {
 	Username string `mapstructure:"username"`
 	Password string `mapstructure:"password"`
 	Host     string `mapstructure:"host"`
-	Post     string `mapstructure:"port"`
+	Port     string `mapstructure:"port"`
 	Name     string `mapstructure:"db_name"`
 }
 
