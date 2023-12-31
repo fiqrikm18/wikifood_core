@@ -21,8 +21,30 @@ database:
 `)
 
 func TestNewDatabaseConnection(t *testing.T) {
-	_, err := NewDatabaseConn()
+	dbConn, err := NewDatabaseConn()
 	assert.Nil(t, err)
+	assert.NotNil(t, dbConn)
+
+	appConf := AppConfig{}
+	err = viper.ReadConfig(bytes.NewBuffer(confMock))
+	assert.Nil(t, err)
+
+	err = viper.Unmarshal(&appConf)
+	assert.Nil(t, err)
+	dbConn, err = NewDatabaseConn(WithCustomConfig(&appConf))
+	assert.Nil(t, err)
+	assert.NotNil(t, dbConn)
+
+	appConf.Database.DBDriver = "test"
+	dbConn, err = NewDatabaseConn(WithCustomConfig(&appConf))
+	assert.NotNil(t, err)
+	assert.Nil(t, dbConn)
+
+	appConf.Database.DBDriver = Postgres
+	appConf.Database.Name = "test"
+	dbConn, err = NewDatabaseConn(WithCustomConfig(&appConf))
+	assert.NotNil(t, err)
+	assert.Nil(t, dbConn)
 }
 
 func TestGetDBDialector(t *testing.T) {

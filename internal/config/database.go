@@ -10,6 +10,7 @@ import (
 	"gorm.io/gorm"
 	"os"
 	"path"
+	"time"
 )
 
 const (
@@ -19,10 +20,24 @@ const (
 	SqlServer = "sqlserver"
 )
 
-func NewDatabaseConn() (*gorm.DB, error) {
-	conf, err := NewAppConfig()
-	if err != nil {
-		return nil, err
+type DBConnConf func(opt *DBConf)
+
+type DBConf struct {
+	AppConfig *AppConfig
+}
+
+func NewDatabaseConn(opts ...DBConnConf) (*gorm.DB, error) {
+	var conf *AppConfig
+	var err error
+	if len(opts) > 0 {
+		dbConf := DBConf{}
+		for _, opt := range opts {
+			opt(&dbConf)
+		}
+
+		conf = dbConf.AppConfig
+	} else {
+		conf, err = NewAppConfig()
 	}
 
 	dialector, err := getDatabaseDialector(conf)
@@ -35,7 +50,19 @@ func NewDatabaseConn() (*gorm.DB, error) {
 		return nil, err
 	}
 
+	dbConn, _ := db.DB()
+	dbConn.SetMaxOpenConns(100)
+	dbConn.SetMaxIdleConns(10)
+	dbConn.SetConnMaxLifetime(time.Minute * 30)
+	dbConn.SetConnMaxIdleTime(time.Minute * 30)
+
 	return db, nil
+}
+
+func WithCustomConfig(config *AppConfig) DBConnConf {
+	return func(opt *DBConf) {
+		opt.AppConfig = config
+	}
 }
 
 func getDatabaseDialector(conf *AppConfig) (gorm.Dialector, error) {
