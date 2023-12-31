@@ -29,6 +29,7 @@ type DBConf struct {
 func NewDatabaseConn(opts ...DBConnConf) (*gorm.DB, error) {
 	var conf *AppConfig
 	var err error
+	conf, err = NewAppConfig()
 	if len(opts) > 0 {
 		dbConf := DBConf{}
 		for _, opt := range opts {
@@ -36,8 +37,6 @@ func NewDatabaseConn(opts ...DBConnConf) (*gorm.DB, error) {
 		}
 
 		conf = dbConf.AppConfig
-	} else {
-		conf, err = NewAppConfig()
 	}
 
 	dialector, err := getDatabaseDialector(conf)
@@ -69,19 +68,16 @@ func getDatabaseDialector(conf *AppConfig) (gorm.Dialector, error) {
 	dbConf := conf.Database
 
 	switch dbConf.DBDriver {
-	case "postgres":
-		dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=%s",
-			dbConf.Host, dbConf.Username, dbConf.Password, dbConf.Name, dbConf.Port, dbConf.TimeZone)
+	case Postgres:
+		dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=%s", dbConf.Host, dbConf.Username, dbConf.Password, dbConf.Name, dbConf.Port, dbConf.TimeZone)
 		return postgres.Open(dsn), nil
-	case "mysql":
-		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-			dbConf.Username, dbConf.Password, dbConf.Host, dbConf.Port, dbConf.Name)
+	case Mysql:
+		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbConf.Username, dbConf.Password, dbConf.Host, dbConf.Port, dbConf.Name)
 		return mysql.Open(dsn), nil
-	case "sqlserver":
-		dsn := fmt.Sprintf("sqlserver://%s:%s@%s:%s?database=%s",
-			dbConf.Username, dbConf.Password, dbConf.Host, dbConf.Port, dbConf.Name)
+	case SqlServer:
+		dsn := fmt.Sprintf("sqlserver:/s:%s@%s:%s?database=%s", dbConf.Username, dbConf.Password, dbConf.Host, dbConf.Port, dbConf.Name)
 		return sqlserver.Open(dsn), nil
-	case "sqlite":
+	case Sqlite:
 		workDir, _ := os.Getwd()
 		confPath := path.Join(workDir, "../../")
 		_, err := os.Stat(confPath + "/" + dbConf.Name + ".db")

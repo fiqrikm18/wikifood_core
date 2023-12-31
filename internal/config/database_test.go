@@ -75,7 +75,7 @@ func TestGetDBDialector(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, dialector)
 
-	appConf.Database.Name = "wikifood_in_exists"
+	appConf.Database.Name = "test_db"
 	dialector, err = getDatabaseDialector(&appConf)
 	assert.NotNil(t, err)
 	assert.Nil(t, dialector)
