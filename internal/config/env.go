@@ -24,6 +24,8 @@ type DBConfig struct {
 	Host     string `mapstructure:"host"`
 	Port     string `mapstructure:"port"`
 	Name     string `mapstructure:"db_name"`
+	TimeZone string `mapstructure:"db_timezone"`
+	DBDriver string `mapstructure:"db_driver"`
 }
 
 // NewAppConfig return all configuration from application

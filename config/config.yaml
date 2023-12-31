@@ -1,8 +1,9 @@
 port: 8080
 database:
-  username: db_username
-  password: db_password
-  host: db_host
-  port: db_port
-  db_name: db_name
-
+  username: postgres
+  password: postgres
+  host: 127.0.0.1
+  port: 5432
+  db_name: wikifood
+  db_timezone: Asia/Jakarta
+  db_driver: postgres

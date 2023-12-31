@@ -30,5 +30,5 @@ func RunServer() {
 	api.NewRouter(v1)
 
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	r.Run(":8080")
+	panic(r.Run(":8080"))
 }
