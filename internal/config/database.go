@@ -75,7 +75,7 @@ func getDatabaseDialector(conf *AppConfig) (gorm.Dialector, error) {
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbConf.Username, dbConf.Password, dbConf.Host, dbConf.Port, dbConf.Name)
 		return mysql.Open(dsn), nil
 	case SqlServer:
-		dsn := fmt.Sprintf("sqlserver:/s:%s@%s:%s?database=%s", dbConf.Username, dbConf.Password, dbConf.Host, dbConf.Port, dbConf.Name)
+		dsn := fmt.Sprintf("sqlserver:%s:%s@%s:%s?database=%s", dbConf.Username, dbConf.Password, dbConf.Host, dbConf.Port, dbConf.Name)
 		return sqlserver.Open(dsn), nil
 	case Sqlite:
 		workDir, _ := os.Getwd()
